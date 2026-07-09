@@ -3,8 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import PostForm
-
-
+from django.shortcuts import get_object_or_404
+from .models import Post
+from django.views.decorators.http import require_POST
 @login_required
 def create_post(request):
 
@@ -57,3 +58,19 @@ def feed(request):
             "posts": posts
         }
     )
+
+@require_POST
+@login_required
+def like_post(request, post_id):
+
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.user in post.likes.all():
+
+        post.likes.remove(request.user)
+
+    else:
+
+        post.likes.add(request.user)
+
+    return redirect("feed")

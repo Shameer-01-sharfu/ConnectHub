@@ -47,12 +47,37 @@
 
             <hr>
 
-            <button class="btn btn-outline-danger">
+            <form action="{% url 'like_post' post.id %}"
+      method="POST">
 
-                ❤️ {{ post.total_likes }}
+    {% csrf_token %}
 
-            </button>
+    <button class="btn btn-outline-danger">
 
+        <form action="{% url 'like_post' post.id %}" method="POST">
+
+    {% csrf_token %}
+
+    <button class="btn btn-light border-0 fs-4">
+
+        {% if user in post.likes.all %}
+
+            <span style="color:red;">❤️</span>
+
+        {% else %}
+
+            <span style="color:gray;">🤍</span>
+
+        {% endif %}
+
+        {{ post.total_likes }}
+
+    </button>
+
+</form>
+    </button>
+
+</form>
         </div>
 
     </div>
