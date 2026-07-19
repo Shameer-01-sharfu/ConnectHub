@@ -1,0 +1,640 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="text-center mb-4">
+        📊 ConnectHub Analytics Dashboard
+    </h2>
+
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-3">
+
+            <div class="card bg-primary text-white shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <h5>Total Users</h5>
+
+                    <h1>{{ users }}</h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card bg-success text-white shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <h5>Total Posts</h5>
+
+                    <h1>{{ posts }}</h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card bg-danger text-white shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <h5>Total Reels</h5>
+
+                    <h1>{{ reels }}</h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card bg-warning shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <h5>Total Messages</h5>
+
+                    <h1>{{ total_messages }}</h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+        <!-- Platform Statistics -->
+
+    <div class="card shadow mb-5">
+
+        <div class="card-header">
+
+            <h4 class="mb-0">
+
+                📈 Platform Statistics
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <canvas id="statsChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- User Growth -->
+
+    <div class="card shadow mb-5">
+
+        <div class="card-header">
+
+            <h4 class="mb-0">
+
+                📅 User Growth (Last 7 Days)
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <canvas id="growthChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- Platform Distribution -->
+
+    <div class="card shadow mb-5">
+
+        <div class="card-header">
+
+            <h4 class="mb-0">
+
+                🥧 Platform Distribution
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <canvas id="pieChart"></canvas>
+
+        </div>
+
+    </div>
+        <!-- Top Trending Reels -->
+
+    <div class="card shadow mb-5">
+
+        <div class="card-header">
+
+            <h4 class="mb-0">
+
+                🔥 Top Trending Reels
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Rank</th>
+                        <th>Preview</th>
+                        <th>User</th>
+                        <th>Caption</th>
+                        <th>Likes</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for reel in top_reels %}
+
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>
+
+                            <video width="80" height="140" muted>
+
+                                <source src="{{ reel.video.url }}" type="video/mp4">
+
+                            </video>
+
+                        </td>
+
+                        <td>
+
+                            @{{ reel.user.username }}
+
+                        </td>
+
+                        <td>
+
+                            {{ reel.caption|truncatechars:30 }}
+
+                        </td>
+
+                        <td>
+
+                            ❤️ {{ reel.total_likes }}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center">
+
+                            No Reels Available
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Top Active Users -->
+
+    <div class="card shadow mb-5">
+
+        <div class="card-header">
+
+            <h4 class="mb-0">
+
+                🏆 Top Active Users
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Rank</th>
+                        <th>Username</th>
+                        <th>Total Posts</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for user in top_users %}
+
+                    <tr>
+
+                        <td>
+
+                            🥇 {{ forloop.counter }}
+
+                        </td>
+
+                        <td>
+
+                            @{{ user.username }}
+
+                        </td>
+
+                        <td>
+
+                            {{ user.total_posts }}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="3" class="text-center">
+
+                            No Users Found
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+        <!-- Top Liked Posts -->
+
+    <div class="card shadow mb-5">
+
+        <div class="card-header">
+
+            <h4 class="mb-0">
+
+                ❤️ Top Liked Posts
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Image</th>
+                        <th>User</th>
+                        <th>Caption</th>
+                        <th>Likes</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for post in top_posts %}
+
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>
+
+                            {% if post.image %}
+
+                                <img src="{{ post.image.url }}"
+                                     width="80"
+                                     class="rounded">
+
+                            {% else %}
+
+                                No Image
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            @{{ post.user.username }}
+
+                        </td>
+
+                        <td>
+
+                            {{ post.caption|truncatechars:35 }}
+
+                        </td>
+
+                        <td>
+
+                            ❤️ {{ post.total_likes }}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center">
+
+                            No Posts Yet
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- Recent Users -->
+
+    <div class="card shadow mb-5">
+
+        <div class="card-header">
+
+            <h4 class="mb-0">
+
+                👥 Recent Users
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>Joined</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for user in recent_users %}
+
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>
+
+                            @{{ user.username }}
+
+                        </td>
+
+                        <td>
+
+                            {{ user.date_joined|date:"d M Y" }}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="3" class="text-center">
+
+                            No Users
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+// ======================
+// Statistics Bar Chart
+// ======================
+
+new Chart(document.getElementById("statsChart"),{
+
+type:"bar",
+
+data:{
+
+labels:["Users","Posts","Reels","Messages"],
+
+datasets:[{
+
+label:"ConnectHub",
+
+data:[
+{{ users }},
+{{ posts }},
+{{ reels }},
+{{ total_messages }}
+]
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+legend:{
+display:false
+}
+}
+
+}
+
+});
+
+
+// ======================
+// User Growth
+// ======================
+
+new Chart(document.getElementById("growthChart"),{
+
+type:"line",
+
+data:{
+
+labels:[
+{% for d in dates %}
+"{{ d }}",
+{% endfor %}
+],
+
+datasets:[{
+
+label:"New Users",
+
+data:[
+{% for c in user_counts %}
+{{ c }},
+{% endfor %}
+],
+
+fill:false,
+
+tension:.4
+
+}]
+
+},
+
+options:{
+
+responsive:true
+
+}
+
+});
+
+
+// ======================
+// Platform Distribution
+// ======================
+
+new Chart(document.getElementById("pieChart"),{
+
+type:"pie",
+
+data:{
+
+labels:[
+
+"Users",
+
+"Posts",
+
+"Reels",
+
+"Messages"
+
+],
+
+datasets:[{
+
+data:[
+
+{{ users }},
+
+{{ posts }},
+
+{{ reels }},
+
+{{ total_messages }}
+
+]
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+
+legend:{
+
+position:"bottom"
+
+}
+
+}
+
+}
+
+});
+
+</script>
+
+{% endblock %}

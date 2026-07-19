@@ -1,0 +1,40 @@
+{% extends "reels/base_reels.html" %}
+
+{% block content %}
+
+<div class="reels-page">
+
+    <div class="reel-container">
+
+        {% for reel in reels %}
+
+            {% include "reels/components/reel_card.html" %}
+
+        {% empty %}
+
+        <div class="text-center mt-5">
+
+            <h2>📌 No Saved Reels</h2>
+
+            <p class="text-muted">
+
+                Save a reel to see it here.
+
+            </p>
+
+            <a href="{% url 'reels' %}"
+               class="btn btn-primary">
+
+                Browse Reels
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

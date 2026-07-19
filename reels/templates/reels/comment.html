@@ -1,0 +1,51 @@
+{% extends "reels/base_reels.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h3 class="mb-3">
+        💬 Comments
+    </h3>
+
+    {% for comment in reel.comments.all %}
+
+        <div class="card mb-2">
+
+            <div class="card-body">
+
+                <b>@{{ comment.user.username }}</b>
+
+                <br>
+
+                {{ comment.comment }}
+
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <p>No comments yet.</p>
+
+    {% endfor %}
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.comment }}
+
+        <button
+            class="btn btn-primary mt-3"
+            type="submit">
+
+            Add Comment
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

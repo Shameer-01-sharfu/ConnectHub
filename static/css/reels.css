@@ -1,0 +1,301 @@
+/* ===========================
+   RESET
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+}
+
+.reels-body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+}
+
+/* ===========================
+   NAVBAR
+=========================== */
+
+.navbar{
+    height:56px;
+    min-height:56px;
+    padding:0 15px;
+}
+
+/* ===========================
+   PAGE
+=========================== */
+
+.reels-page{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100dvh;
+}
+
+.reel-container{
+    width:100%;
+    height:100%;
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
+    scroll-snap-type:y mandatory;
+    scroll-behavior:smooth;
+
+    scrollbar-width:none;
+}
+
+.reel-container::-webkit-scrollbar{
+    display:none;
+}
+
+/* ===========================
+   SINGLE REEL
+=========================== */
+
+.reel{
+    position:relative;
+
+    width:100%;
+    height:100%;
+
+    scroll-snap-align:start;
+    flex-shrink:0;
+
+    background:#000;
+    overflow:hidden;
+}
+
+/* ===========================
+   VIDEO
+=========================== */
+
+.reel-video{
+    position:absolute;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+    display:block;
+    cursor: pointer;
+}
+
+/* ===========================
+   OVERLAY
+=========================== */
+
+.video-overlay{
+    position:absolute;
+    inset:0;
+
+    background:linear-gradient(
+        transparent,
+        rgba(0,0,0,.65)
+    );
+
+    z-index:1;
+    pointer-events:none;
+}
+
+/* ===========================
+   USER INFO
+=========================== */
+
+.reel-info{
+    position:absolute;
+
+    left:20px;
+    bottom:25px;
+
+    z-index:5;
+    color:#fff;
+}
+
+.user-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:10px;
+}
+
+.profile-pic{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #fff;
+}
+
+.username{
+    font-size:17px;
+    font-weight:bold;
+}
+
+.caption{
+    max-width:320px;
+    font-size:15px;
+}
+
+/* ===========================
+   ACTIONS
+=========================== */
+
+.reel-actions{
+    position:absolute;
+
+    right:15px;
+    bottom:90px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+
+    z-index:5;
+}
+
+.action-btn{
+    width:58px;
+    height:58px;
+
+    border:none;
+    border-radius:50%;
+
+    background:rgba(255,255,255,.18);
+    color:#fff;
+
+    font-size:28px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    text-decoration:none;
+    cursor:pointer;
+}
+
+.action-count{
+    color:#fff;
+    font-weight:bold;
+}
+
+.action-count{
+    color:white;
+    font-size:14px;
+    text-align:center;
+}
+
+
+
+/* ===========================
+   EMPTY
+=========================== */
+
+.empty-reels{
+    width:100%;
+    height:100%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+
+    color:#fff;
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media(max-width:768px){
+
+    .navbar{
+        height:56px;
+    }
+
+    .reels-page{
+        top:56px;
+    }
+
+    .reel-info{
+        left:15px;
+    }
+
+    .reel-actions{
+        right:10px;
+    }
+}
+
+/* ===========================
+   DESKTOP PHONE-FRAME FIX
+=========================== */
+
+.reel-container{
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.reel{
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+@media(min-width: 769px){
+    .reels-page{
+        display: flex;
+        justify-content: center;
+        background: #000;
+    }
+}
+
+.heart-animation{
+
+    position:absolute;
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    font-size:80px;
+
+    animation:heartPop .7s ease;
+
+    pointer-events:none;
+
+    z-index:999;
+}
+
+@keyframes heartPop{
+
+    0%{
+        transform:translate(-50%,-50%) scale(.3);
+        opacity:0;
+    }
+
+    30%{
+        transform:translate(-50%,-50%) scale(1.2);
+        opacity:1;
+    }
+
+    100%{
+        transform:translate(-50%,-50%) scale(1);
+        opacity:0;
+    }
+
+}

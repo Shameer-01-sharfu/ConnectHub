@@ -25,6 +25,22 @@ urlpatterns = [
     path("", include("accounts.urls")),
 
     path("posts/", include("posts.urls")),
+
+    path("comments/", include("comments.urls")),
+
+    path("follows/", include("follows.urls")),
+
+    path("notifications/", include("notifications.urls")),
+
+    path("chat/", include("chat.urls")),
+
+    path("search/", include("search.urls")),
+
+    path("stories/", include("stories.urls")),
+
+    path("reels/", include("reels.urls")),
+
+    path("analytics/", include("analytics.urls")),
 ]
 
 if settings.DEBUG:

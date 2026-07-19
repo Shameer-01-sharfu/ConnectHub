@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<div class="card shadow p-4">
+
+<h3>Create Highlight</h3>
+
+<form method="POST" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<div class="mb-3">
+
+<label>Highlight Title</label>
+
+<input
+type="text"
+name="title"
+class="form-control"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label>Cover Image</label>
+
+<input
+type="file"
+name="cover"
+class="form-control"
+required>
+
+</div>
+
+<button class="btn btn-primary">
+
+Create Highlight
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

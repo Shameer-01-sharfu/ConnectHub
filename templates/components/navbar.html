@@ -1,10 +1,35 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+{% load static %}
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+
     <div class="container">
 
-        <a class="navbar-brand fw-bold fs-3" href="/">
-            🚀 ConnectHub
-        </a>
+        <!-- Logo -->
+       <a class="navbar-brand d-flex align-items-center"
+   href="{% url 'home' %}">
 
+    <img
+        src="{% static 'images/connecthub_logo.png' %}"
+        alt="ConnectHub"
+        height="55"
+        class="connecthub-logo">
+
+    <div class="ms-2">
+
+    <div class="fw-bold fs-4 text-primary">
+        ConnectHub
+    </div>
+
+    <small class="text-muted tagline">
+        CONNECT • SHARE • GROW
+    </small>
+
+</div>
+
+
+
+</a>
+
+        <!-- Mobile Toggle -->
         <button class="navbar-toggler"
                 type="button"
                 data-bs-toggle="collapse"
@@ -14,40 +39,174 @@
 
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="collapse navbar-collapse"
+             id="navbarNav">
 
-            <ul class="navbar-nav ms-auto">
+            <!-- Search -->
+            <form class="d-flex mx-auto"
+                  action="{% url 'search' %}"
+                  method="GET"
+                  style="max-width:420px;width:100%;">
+
+                <input
+                    type="search"
+                    class="form-control rounded-pill px-4"
+                    name="q"
+                    placeholder="Search users...">
+
+            </form>
+
+            <ul class="navbar-nav ms-auto align-items-center">
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/">🏠 Home</a>
+
+                    <a class="nav-link"
+                       href="/">
+
+                        <i class="bi bi-house-door-fill"></i>
+
+                        Home
+
+                    </a>
+
                 </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{% url 'reels' %}">
+
+                        <i class="bi bi-camera-reels-fill"></i>
+
+                        Reels
+
+                    </a>
+
+                </li>
+                <li class="nav-item">
+
+    <a class="nav-link"
+       href="{% url 'chats' %}">
+
+        <i class="bi bi-chat-dots-fill"></i>
+
+        Chats
+
+    </a>
+
+</li>
 
                 {% if user.is_authenticated %}
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">👤 Profile</a>
-                    </li>
+                <li class="nav-item">
 
-                    <li class="nav-item">
-                        <a class="nav-link text-danger" href="{% url 'logout' %}">
-                            Logout
-                        </a>
-                    </li>
+                    <a class="nav-link"
+                       href="{% url 'profile' %}">
+
+                        <i class="bi bi-person-circle"></i>
+
+                        Profile
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+    <a class="nav-link position-relative"
+       href="{% url 'notifications' %}">
+
+        🔔 Notifications
+
+        {% if unread_notifications_count > 0 %}
+
+        <span
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+
+            {{ unread_notifications_count }}
+
+        </span>
+
+        {% endif %}
+
+    </a>
+
+</li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{% url 'saved_posts' %}">
+
+                        <i class="bi bi-bookmark-heart-fill"></i>
+
+                        Saved Posts
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{% url 'saved_reels' %}">
+
+                        <i class="bi bi-bookmark-check-fill"></i>
+
+                        Saved Reels
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+<button
+    id="theme-toggle"
+    class="btn btn-outline-light ms-3">
+
+🌙
+
+</button>
+
+</li>
+
+                <li class="nav-item ms-2">
+
+                    <a class="btn btn-danger rounded-pill px-3"
+                       href="{% url 'logout' %}">
+
+                        <i class="bi bi-box-arrow-right"></i>
+
+                        Logout
+
+                    </a>
+
+                </li>
 
                 {% else %}
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">
-                            Login
-                        </a>
-                    </li>
+                <li class="nav-item">
 
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-primary text-white px-3 ms-2"
-                           href="{% url 'register' %}">
-                            Register
-                        </a>
-                    </li>
+                    <a class="btn btn-outline-primary rounded-pill px-3 me-2"
+                       href="{% url 'login' %}">
+
+                        Login
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="btn btn-primary rounded-pill px-3"
+                       href="{% url 'register' %}">
+
+                        Register
+
+                    </a>
+
+                </li>
 
                 {% endif %}
 
@@ -56,4 +215,5 @@
         </div>
 
     </div>
+
 </nav>

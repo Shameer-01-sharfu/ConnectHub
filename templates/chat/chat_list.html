@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-4" style="max-width:850px;">
+
+<div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <div class="card-header bg-white py-3">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <h3 class="mb-0 fw-bold">
+
+                💬 Chats
+
+            </h3>
+
+            <span class="badge bg-primary rounded-pill">
+
+                {{ conversation_list|length }}
+
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- =========================
+         SEARCH BAR
+    ========================== -->
+
+    <div class="p-3 bg-light">
+
+        <input
+
+            type="text"
+
+            id="chatSearch"
+
+            class="form-control rounded-pill"
+
+            placeholder="🔍 Search chats...">
+
+    </div>
+
+    <!-- =========================
+         CHAT LIST
+    ========================== -->
+
+    <div
+
+        class="list-group list-group-flush"
+
+        id="chat-list">
+
+        {% include "chat/chat_list_items.html" %}
+
+    </div>
+
+</div>
+
+</div>
+<style>
+
+.chat-item{
+    transition:.25s;
+    cursor:pointer;
+}
+
+.chat-item:hover{
+    background:#f8f9fa;
+    transform:translateX(6px);
+}
+
+.card{
+    border-radius:20px;
+}
+
+.list-group-item{
+    border:0 !important;
+}
+
+.list-group-item .card{
+    transition:.25s;
+}
+
+.list-group-item:hover .card{
+    box-shadow:0 8px 18px rgba(0,0,0,.08);
+}
+
+.badge{
+    font-size:11px;
+}
+
+#chatSearch{
+    border:none;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+#chatSearch:focus{
+    box-shadow:0 2px 14px rgba(13,110,253,.25);
+}
+
+</style>
+<script>
+
+// =======================
+// SEARCH
+// =======================
+
+const search = document.getElementById("chatSearch");
+
+search.addEventListener("keyup", function () {
+
+    const value = this.value.toLowerCase();
+
+    document.querySelectorAll("#chat-list .text-decoration-none").forEach(function (item) {
+
+        const text = item.innerText.toLowerCase();
+
+        item.style.display = text.includes(value) ? "" : "none";
+
+    });
+
+});
+
+// =======================
+// LIVE CHAT LIST
+// =======================
+
+let lastChatHTML = "";
+
+function refreshChatList() {
+
+    fetch("/chat/list-refresh/")
+
+    .then(r => r.json())
+
+    .then(data => {
+
+        if (data.html !== lastChatHTML) {
+
+            lastChatHTML = data.html;
+
+            document.getElementById("chat-list").innerHTML = data.html;
+
+        }
+
+    })
+
+    .catch(err => console.log(err));
+
+}
+
+// First Load
+refreshChatList();
+
+// Auto Refresh
+setInterval(refreshChatList, 800);
+
+// Window Focus
+window.addEventListener("focus", refreshChatList);
+
+// Tab Visible
+document.addEventListener("visibilitychange", function(){
+
+    if(!document.hidden){
+
+        refreshChatList();
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "reels/base_reels.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="card shadow p-4 text-center">
+
+        <h2 class="mb-4 text-danger">
+
+            🗑 Delete Reel
+
+        </h2>
+
+        <p>
+
+            Are you sure you want to delete this reel?
+
+        </p>
+
+        <video
+            src="{{ reel.video.url }}"
+            controls
+            class="w-100 rounded mb-3"
+            style="max-height:400px;object-fit:cover;">
+
+        </video>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="btn btn-danger">
+
+                Yes, Delete
+
+            </button>
+
+            <a
+                href="{% url 'reels' %}"
+                class="btn btn-secondary">
+
+                Cancel
+
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

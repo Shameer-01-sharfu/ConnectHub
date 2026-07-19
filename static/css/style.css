@@ -1,6 +1,271 @@
+/* =========================
+   CONNECTHUB NAVBAR
+========================= */
+
+
+.navbar{
+
+    height:70px;
+
+    background:#ffffff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 30px;
+
+    border-bottom:1px solid #e5e7eb;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:1000;
+
+}
+
+
+/* LOGO */
+
+.brand{
+
+    display:flex;
+
+    align-items:center;
+
+    text-decoration:none;
+
+    gap:12px;
+
+}
+
+
+.logo-box img{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+}
+
+
+.brand-text h2{
+
+    margin:0;
+
+    color:#2563eb;
+
+    font-size:22px;
+
+}
+
+
+.brand-text span{
+
+    font-size:10px;
+
+    color:#6b7280;
+
+    letter-spacing:1px;
+
+}
+
+
+
+/* SEARCH */
+
+
+.nav-center input{
+
+    width:350px;
+
+    padding:12px 18px;
+
+    border-radius:25px;
+
+    border:1px solid #ddd;
+
+    outline:none;
+
+}
+
+
+
+/* RIGHT ICONS */
+
+
+.nav-right{
+
+    display:flex;
+
+    gap:20px;
+
+}
+
+
+.nav-right a{
+
+    font-size:22px;
+
+    text-decoration:none;
+
+}
+/* ===========================
+   CONNECTHUB THEME
+=========================== */
+
+:root{
+
+    --primary:#2563eb;
+
+    --primary-dark:#1d4ed8;
+
+    --bg:#f4f7fb;
+
+    --card:#ffffff;
+
+    --text:#1f2937;
+
+    --border:#e5e7eb;
+
+    --shadow:0 8px 24px rgba(0,0,0,.08);
+
+    --radius:18px;
+
+}
+
+*{
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+    font-family:'Inter',sans-serif;
+
+}
+
+body{
+
+    background:var(--bg);
+
+    color:var(--text);
+
+}
+
+.page-wrapper{
+
+    min-height:100vh;
+
+}
+
+.container{
+
+    max-width:1300px;
+
+}
+
+.card{
+
+    border:none;
+
+    border-radius:var(--radius);
+
+    box-shadow:var(--shadow);
+
+}
+
+.btn{
+
+    border-radius:12px;
+
+    font-weight:600;
+
+}
+
+.btn-primary{
+
+    background:var(--primary);
+
+    border:none;
+
+}
+
+.btn-primary:hover{
+
+    background:var(--primary-dark);
+
+}
+
+.message-container{
+
+    position:fixed;
+
+    top:90px;
+
+    right:20px;
+
+    z-index:9999;
+
+    width:320px;
+
+}
+
+.alert{
+
+    border:none;
+
+    border-radius:12px;
+
+}
+
+img{
+
+    object-fit:cover;
+
+}
+
+a{
+
+    text-decoration:none;
+
+}
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#cbd5e1;
+
+    border-radius:10px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#94a3b8;
+
+}
 body{
     background:#f5f5f5;
     font-family:Arial,sans-serif;
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
+    overflow-x:hidden;
 }
 
 .navbar-brand{
@@ -10,4 +275,986 @@ body{
 
 .card{
     border-radius:15px;
+}
+
+/* ===========================
+   NAVBAR
+=========================== */
+
+.navbar{
+
+    background:#fff !important;
+
+    border-bottom:1px solid #e5e7eb;
+
+}
+
+.navbar-brand{
+
+    font-weight:700;
+
+}
+
+.nav-link{
+
+    font-weight:500;
+
+    color:#374151 !important;
+
+    margin-left:8px;
+
+    transition:.25s;
+
+}
+
+.nav-link:hover{
+
+    color:#2563eb !important;
+
+}
+
+.form-control{
+
+    border-radius:30px;
+
+    border:1px solid #dbe4ee;
+
+    box-shadow:none;
+
+}
+
+.form-control:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 0 .15rem rgba(37,99,235,.15);
+
+}
+
+.online-status{
+    color:#28a745;
+    font-size:13px;
+    font-weight:600;
+}
+@media(max-width:768px){
+
+
+.navbar{
+
+    padding:0 15px;
+
+}
+
+
+.brand-text span{
+
+    display:none;
+
+}
+
+
+.brand-text h2{
+
+    font-size:18px;
+
+}
+
+
+.nav-center{
+
+    display:none;
+
+}
+
+
+.nav-right{
+
+    gap:12px;
+
+}
+
+
+.nav-right a{
+
+    font-size:19px;
+
+}
+
+
+}
+/* ===============================
+   CONNECTHUB NAVBAR POLISH
+================================ */
+
+
+.connecthub-logo{
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+}
+
+
+.tagline{
+
+    font-size:10px;
+
+    letter-spacing:1.5px;
+
+    font-weight:500;
+
+}
+
+
+/* Mobile Navbar */
+
+@media(max-width:768px){
+
+
+.navbar-brand .fs-4{
+
+    font-size:20px!important;
+
+}
+
+
+.tagline{
+
+    display:none;
+
+}
+
+
+.connecthub-logo{
+
+    height:42px;
+
+}
+
+
+.navbar-nav .nav-link{
+
+    padding:10px 0;
+
+}
+
+
+}
+/* ==========================
+   STORIES UI
+========================== */
+
+
+.stories-card{
+
+    background:white;
+
+    padding:15px;
+
+    border-radius:15px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+
+}
+
+
+.stories-container{
+
+    display:flex;
+
+    gap:20px;
+
+    overflow-x:auto;
+
+    scrollbar-width:none;
+
+}
+
+
+.stories-container::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+
+.story-item{
+
+    min-width:80px;
+
+    text-align:center;
+
+}
+
+
+.story-image{
+
+    width:75px;
+
+    height:75px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    padding:3px;
+
+    border:3px solid #ef4444;
+
+}
+
+
+.your-story{
+
+    border-color:#2563eb;
+
+}
+
+
+.story-item small{
+
+    display:block;
+
+    margin-top:8px;
+
+    font-size:12px;
+
+    white-space:nowrap;
+
+}
+
+/* =====================
+   POST CARD UI
+===================== */
+
+
+.post-card{
+
+    background:white;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}
+
+
+.post-header{
+
+    padding:15px;
+
+    border-bottom:1px solid #eee;
+
+}
+
+
+.post-body{
+
+    padding:18px;
+
+}
+
+
+.post-body img{
+
+    width:100%;
+
+    object-fit:cover;
+
+    border-radius:15px;
+
+
+
+}
+
+
+
+.post-body p{
+
+    font-size:15px;
+
+}
+
+
+
+.post-body .btn{
+
+    border-radius:20px;
+
+}
+
+
+
+/* Mobile */
+
+@media(max-width:768px){
+
+
+.post-card{
+
+    border-radius:12px;
+
+}
+
+
+.post-body{
+
+    padding:12px;
+
+}
+
+
+.post-body img{
+
+    border-radius:10px;
+
+}
+
+
+}
+
+/* =================================
+   CONNECTHUB POST DESIGN
+================================= */
+
+
+.post-card{
+
+    background:var(--card);
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+
+.post-card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+
+
+.post-header{
+
+    padding:15px;
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+
+
+.post-profile-img{
+
+    width:50px;
+
+    height:50px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    margin-right:12px;
+
+}
+
+
+
+.post-body{
+
+    padding:18px;
+
+}
+
+
+
+.post-body img{
+
+    width:100%;
+
+    object-fit:cover;
+
+    border-radius:15px;
+
+}
+
+
+
+.post-stats{
+
+    display:flex;
+
+    gap:25px;
+
+    font-weight:600;
+
+    margin:15px 0;
+
+}
+
+
+
+.btn-like{
+
+    background:#ef4444;
+
+    color:white;
+
+    border-radius:25px;
+
+    padding:8px 20px;
+
+}
+
+
+.btn-save{
+
+    border:1px solid #ddd;
+
+    border-radius:25px;
+
+    padding:8px 20px;
+
+    margin-top:10px;
+
+}
+
+
+
+.saved-btn{
+
+    background:#16a34a;
+
+    color:white;
+
+}
+
+
+
+@media(max-width:768px){
+
+
+.post-card{
+
+    border-radius:12px;
+
+}
+
+
+.post-body{
+
+    padding:12px;
+
+}
+
+
+.post-stats{
+
+    gap:15px;
+
+}
+
+
+}
+/* =========================
+   POST CARD DESIGN
+========================= */
+
+
+.post-card{
+
+    background:var(--card);
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}
+
+
+
+.post-header{
+
+    display:flex;
+
+    align-items:center;
+
+    padding:15px;
+
+    border-bottom:1px solid #eee;
+
+}
+
+
+
+.post-profile-img{
+
+    width:50px;
+
+    height:50px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    margin-right:12px;
+
+}
+
+
+
+.post-body{
+
+    padding:18px;
+
+}
+
+
+
+.post-image{
+
+    width:100%;
+
+    border-radius:15px;
+
+    margin-top:10px;
+
+}
+
+
+
+.post-stats{
+
+    display:flex;
+
+    gap:25px;
+
+    margin:15px 0;
+
+    font-weight:600;
+
+}
+
+
+
+.post-actions{
+
+    display:flex;
+
+    gap:10px;
+
+    align-items:center;
+
+}
+
+
+
+.btn-like{
+
+    background:#ef4444;
+
+    color:white;
+
+    border-radius:25px;
+
+    padding:8px 20px;
+
+}
+
+
+
+.btn-save{
+
+    border:1px solid #ddd;
+
+    border-radius:25px;
+
+    padding:8px 20px;
+
+}
+
+
+
+.saved-btn{
+
+    background:#16a34a;
+
+    color:white;
+
+}
+
+
+
+@media(max-width:768px){
+
+    .post-card{
+
+        border-radius:12px;
+
+    }
+
+
+    .post-body{
+
+        padding:12px;
+
+    }
+
+
+    .post-actions{
+
+        flex-wrap:wrap;
+
+    }
+
+}
+.like-btn{
+
+transition:.3s;
+
+}
+
+
+.like-btn.liked{
+
+background:#dc2626;
+
+color:white;
+
+transform:scale(1.1);
+
+}
+
+.save-btn{
+
+border-radius:25px;
+
+transition:.3s;
+
+}
+
+
+
+.save-btn.saved{
+
+background:#16a34a;
+
+color:white;
+
+transform:scale(1.05);
+
+}
+#comments-1,
+#comments-2,
+[id^="comments-"]{
+
+    max-height:180px;
+
+    overflow-y:auto;
+
+}
+
+#comments-1 .border,
+[id^="comments-"] .border{
+
+    background:#f8f9fa;
+
+    border-radius:10px;
+
+}
+
+.btn-share{
+
+    border-radius:30px;
+
+    transition:.3s;
+
+}
+
+.btn-share:hover{
+
+    transform:scale(1.05);
+
+}
+
+/* ===========================
+   LIKE ANIMATION
+=========================== */
+
+.like-btn{
+    transition: all .25s ease;
+}
+
+.like-btn.liked{
+
+    transform: scale(1.15);
+
+    background:#dc3545;
+
+    color:#fff;
+
+    border-color:#dc3545;
+
+}
+
+@keyframes pop{
+
+    0%{
+        transform:scale(.8);
+    }
+
+    50%{
+        transform:scale(1.25);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+
+}
+
+.like-btn.animate{
+
+    animation:pop .35s ease;
+
+}
+
+/* ===========================
+   SAVE ANIMATION
+=========================== */
+
+.save-btn{
+
+    transition:all .3s ease;
+
+}
+
+.save-btn.saved{
+
+    background:#198754;
+
+    color:white;
+
+    transform:scale(1.08);
+
+}
+
+.save-btn.animate{
+
+    animation:pop .35s ease;
+
+}
+
+/* ===========================
+STORIES
+=========================== */
+
+.story-scroll{
+
+    gap:20px;
+
+    white-space:nowrap;
+
+    overflow-x:auto;
+
+    scrollbar-width:none;
+
+    -ms-overflow-style:none;
+
+}
+
+.story-scroll::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+.story-item{
+
+    min-width:90px;
+
+    flex:0 0 auto;
+
+}
+
+.story-item img{
+
+    width:75px;
+
+    height:75px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+}
+
+.story-item small{
+
+    display:block;
+
+    margin-top:8px;
+
+    font-weight:600;
+
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+.post-card:target{
+
+    animation:highlight 1.5s;
+
+    border:3px solid #0d6efd;
+
+}
+
+@keyframes highlight{
+
+0%{
+
+background:#d9ecff;
+
+transform:scale(1.02);
+
+}
+
+100%{
+
+background:white;
+
+transform:scale(1);
+
+}
+
+}
+
+@media (max-width: 991px){
+
+.navbar-collapse{
+
+    background:#fff;
+
+    margin-top:15px;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+
+    z-index:9999;
+
+    position:relative;
+
+}
+
+.navbar-nav{
+
+    gap:10px;
+
+}
+.navbar{
+
+    padding-bottom:15px;
+
+}
+
+}
+.reply-box{
+    background:#f1f3f4;
+    border-left:4px solid #0d6efd;
+    border-radius:6px;
+    padding:8px;
+    margin-bottom:8px;
+}
+
+.reply-user{
+    color:#0d6efd;
+    font-weight:bold;
+    font-size:13px;
+}
+
+.reply-message{
+    color:#555;
+    font-size:13px;
+}
+
+.message{
+    position:relative;
+}
+
+.reply-btn{
+    display:none;
+    position:absolute;
+    top:-10px;
+    right:-10px;
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:50%;
+    width:26px;
+    height:26px;
+    font-size:14px;
+    cursor:pointer;
+    box-shadow:0 1px 4px rgba(0,0,0,.15);
+    line-height:1;
+}
+
+.message:hover .reply-btn{
+    display:block;
+}
+
+.reply-quote{
+    background:#f1f3f4;
+    border-left:4px solid #0d6efd;
+    padding:8px 10px;
+    margin-bottom:8px;
+    border-radius:6px;
+}
+
+.reply-quote-user{
+    font-weight:600;
+    color:#0d6efd;
+    font-size:13px;
+}
+
+.reply-quote-text{
+    font-size:13px;
+    color:#555;
+}
+.delete-btn{
+    display:none;
+    position:absolute;
+    top:-10px;
+    left:-10px;
+    background:#dc3545;
+    color:white;
+    border-radius:50%;
+    width:24px;
+    height:24px;
+    font-size:12px;
+    text-align:center;
+    line-height:24px;
+    cursor:pointer;
+    box-shadow:0 1px 4px rgba(0,0,0,.2);
+}
+
+.my-message:hover .delete-btn{
+    display:block;
 }

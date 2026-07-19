@@ -2,34 +2,83 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 from .forms import RegisterForm, ProfileUpdateForm
 from posts.models import Post
+from stories.models import Story
+from django.utils import timezone
 
-
+from follows.models import Follow
+from django.db.models import Max
+from stories.models import Highlight
+from posts.models import SavedPost
 def home(request):
+
+    users = []
+    following_ids = []
+    stories = []
+    saved_posts = []
+    posts = Post.objects.all().select_related("user").prefetch_related(
+        "likes",
+        "comments"
+    ).order_by("-created_at")
+
+    highlights = Highlight.objects.none()
 
     if request.user.is_authenticated:
 
-        posts_count = Post.objects.filter(
+        highlights = Highlight.objects.exclude(
             user=request.user
-        ).count()
+        ).order_by("-created_at")
 
-        context = {
-            "posts_count": posts_count,
-            "followers_count": 0,
-            "following_count": 0,
-        }
+        users = User.objects.exclude(id=request.user.id)
 
-        return render(
-            request,
-            "accounts/home.html",
-            context
+        following_ids = Follow.objects.filter(
+            follower=request.user
+        ).values_list(
+            "following_id",
+            flat=True
         )
+
+        saved_posts = SavedPost.objects.filter(
+    user=request.user
+).values_list(
+    "post_id",
+    flat=True
+)
+
+        latest_story_users = (
+            Story.objects.filter(
+                expires_at__gt=timezone.now()
+            )
+            .values("user")
+            .annotate(last_story=Max("created_at"))
+        )
+
+        stories = []
+
+        for item in latest_story_users:
+
+            latest_story = Story.objects.filter(
+                user=item["user"],
+                expires_at__gt=timezone.now()
+            ).order_by("-created_at").first()
+
+            if latest_story:
+                stories.append(latest_story)
 
     return render(
         request,
-        "accounts/home.html"
+        "accounts/home.html",
+        {
+            "users": users,
+            "following_ids": following_ids,
+            "stories": stories,
+            "highlights": highlights,
+            "posts": posts,
+            "saved_posts": saved_posts,
+        }
     )
 
 
@@ -124,9 +173,19 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def profile(request):
+
     profile = request.user.profile
 
+    highlights = Highlight.objects.filter(
+        user=request.user
+    )
+
+    stories = Story.objects.filter(
+        user=request.user
+    ).order_by("-created_at")
+
     if request.method == "POST":
+
         form = ProfileUpdateForm(
             request.POST,
             request.FILES,
@@ -134,12 +193,21 @@ def profile(request):
         )
 
         if form.is_valid():
+
             form.save()
-            messages.success(request, "Profile Updated Successfully.")
+
+            messages.success(
+                request,
+                "Profile Updated Successfully."
+            )
+
             return redirect("profile")
 
     else:
-        form = ProfileUpdateForm(instance=profile)
+
+        form = ProfileUpdateForm(
+            instance=profile
+        )
 
     return render(
         request,
@@ -147,5 +215,50 @@ def profile(request):
         {
             "form": form,
             "profile": profile,
+            "highlights": highlights,
+            "stories": stories,
         },
+    )
+
+def user_profile(request, user_id):
+
+    profile_user = get_object_or_404(
+        User,
+        id=user_id
+    )
+
+    # User Posts
+    posts = Post.objects.filter(
+        user=profile_user
+    )
+
+    # User Highlights
+    highlights = Highlight.objects.filter(
+        user=profile_user
+    ).order_by("-created_at")
+
+    is_following = False
+    can_message = False
+
+    if request.user.is_authenticated:
+
+        is_following = Follow.objects.filter(
+            follower=request.user,
+            following=profile_user
+        ).exists()
+
+        can_message = is_following
+
+    context = {
+        "profile_user": profile_user,
+        "posts": posts,
+        "highlights": highlights,
+        "is_following": is_following,
+        "can_message": can_message,
+    }
+
+    return render(
+        request,
+        "accounts/user_profile.html",
+        context,
     )

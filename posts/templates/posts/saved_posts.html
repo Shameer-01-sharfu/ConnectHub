@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">🔖 Saved Posts</h2>
+
+    <p class="text-muted">
+        Total Saved Posts: {{ saved_posts|length }}
+    </p>
+
+    {% if saved_posts %}
+
+        {% for item in saved_posts %}
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header d-flex align-items-center">
+
+                <img src="{{ item.post.user.profile.profile_picture.url }}"
+                     width="45"
+                     height="45"
+                     class="rounded-circle me-2"
+                     style="object-fit:cover;">
+
+                <div>
+
+                    <a href="{% url 'user_profile' item.post.user.id %}"
+                       class="text-decoration-none fw-bold">
+
+                        {{ item.post.user.first_name }}
+                        {{ item.post.user.last_name }}
+
+                    </a>
+
+                    <br>
+
+                    <small class="text-muted">
+                        @{{ item.post.user.username }}
+                    </small>
+
+                </div>
+
+            </div>
+
+            <div class="card-body">
+
+                <p>{{ item.post.caption }}</p>
+
+                {% if item.post.image %}
+
+                <img src="{{ item.post.image.url }}"
+                     class="img-fluid rounded mb-3">
+
+                {% endif %}
+
+                <p>
+
+                    ❤️ {{ item.post.likes.count }} Likes |
+                    💬 {{ item.post.comments.count }} Comments
+
+                </p>
+
+                <a href="{% url 'save_post' item.post.id %}"
+                   class="btn btn-danger">
+
+                    ❌ Unsave
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+    <div class="alert alert-info text-center">
+
+        <h4>No Saved Posts Yet 📭</h4>
+
+        <p>Save your favourite posts and they will appear here.</p>
+
+        <a href="{% url 'home' %}" class="btn btn-primary">
+            🏠 Go to Home
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

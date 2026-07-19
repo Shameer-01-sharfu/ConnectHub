@@ -1,0 +1,65 @@
+{% extends "reels/base_reels.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="card shadow p-4">
+
+        <h2 class="mb-4">
+
+            ✏️ Edit Reel
+
+        </h2>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Caption
+
+                </label>
+
+                {{ form.caption }}
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Change Video (Optional)
+
+                </label>
+
+                {{ form.video }}
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+
+                💾 Save Changes
+
+            </button>
+
+            <a
+                href="{% url 'reels' %}"
+                class="btn btn-secondary">
+
+                Cancel
+
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

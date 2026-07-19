@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container py-4">
+
+
+<div class="card mx-auto"
+style="max-width:400px;">
+
+
+<video
+controls
+autoplay
+style="
+width:100%;
+border-radius:15px;
+">
+
+<source src="{{ reel.video.url }}">
+
+</video>
+
+
+
+<h5 class="mt-3">
+{{ reel.user.username }}
+</h5>
+
+
+<p>
+{{ reel.caption }}
+</p>
+
+
+
+<div>
+
+❤️ {{ reel.likes.count }}
+
+&nbsp;&nbsp;
+
+💬 {{ reel.comments.count }}
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+{% endblock %}

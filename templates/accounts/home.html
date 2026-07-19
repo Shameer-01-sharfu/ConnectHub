@@ -2,29 +2,118 @@
 
 {% block content %}
 
+{% csrf_token %}
+
 <div class="container mt-4">
+
+<!-- ================= STORIES ================= -->
+
+<div class="stories-card mb-4">
+
+    <div class="stories-container">
+
+        <!-- Your Story -->
+
+        <div class="story-item text-center">
+
+    <a href="{% url 'upload_story' %}" class="text-decoration-none">
+
+        <img src="{{ user.profile.profile_picture.url }}"
+             class="story-image your-story">
+
+        <br>
+
+        <small>Your Story</small>
+
+    </a>
+
+</div>
+
+        <!-- Other Users Stories -->
+
+        {% for story in stories %}
+
+        <div class="story-item text-center">
+
+            <a href="{% url 'user_stories' story.user.id %}"
+               class="text-decoration-none">
+
+                <img src="{{ story.user.profile.profile_picture.url }}"
+                     width="75"
+                     height="75"
+                     class="story-image"
+                     style="object-fit:cover;">
+
+                <br>
+
+                <small>
+
+                    {% if story.user.first_name %}
+                        {{ story.user.first_name }}
+                    {% else %}
+                        {{ story.user.username }}
+                    {% endif %}
+
+                </small>
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- ================= BUTTONS ================= -->
+
+<div class="mb-4 d-flex gap-2">
+
+    <a href="{% url 'upload_story' %}"
+       class="btn btn-primary">
+
+        📸 Add Story
+
+    </a>
+
+    <a href="{% url 'create_post' %}"
+       class="btn btn-success">
+
+        📝 Create Post
+
+    </a>
+
+</div>
 
 {% if user.is_authenticated %}
 
-<div class="card shadow-lg border-0">
+<!-- ================= PROFILE ================= -->
+
+<div class="card shadow-lg">
 
     <img src="{{ user.profile.cover_picture.url }}"
-         style="width:100%;height:260px;object-fit:cover;">
+         style="width:100%;height:250px;object-fit:cover;">
 
     <div class="text-center">
 
         <img src="{{ user.profile.profile_picture.url }}"
              class="rounded-circle border border-4 border-white shadow"
-             width="180"
-             height="180"
-             style="margin-top:-90px;object-fit:cover;">
+             width="170"
+             height="170"
+             style="margin-top:-80px;object-fit:cover;">
 
-        <h2 class="mt-3">
-            {{ user.first_name }} {{ user.last_name }}
+        <h2>
+
+            {{ user.first_name }}
+            {{ user.last_name }}
+
         </h2>
 
-        <h5 class="text-secondary">
+        <h5 class="text-muted">
+
             @{{ user.username }}
+
         </h5>
 
         <p>{{ user.profile.bio }}</p>
@@ -32,71 +121,542 @@
         <p>📍 {{ user.profile.location }}</p>
 
         <p>
+
             🌐
-            <a href="{{ user.profile.website }}" target="_blank">
+
+            <a href="{{ user.profile.website }}"
+               target="_blank">
+
                 {{ user.profile.website }}
+
             </a>
+
         </p>
 
-        <hr>
-
-        <div class="row text-center">
+        <div class="row text-center mt-4">
 
             <div class="col">
-                <h3>{{ posts_count }}</h3>
-                <p>Posts</p>
+
+                <h4>{{ user.posts.count }}</h4>
+
+                <small>Posts</small>
+
             </div>
 
             <div class="col">
-                <h3>{{ followers_count }}</h3>
-                <p>Followers</p>
+
+                <h4>
+
+                    <a href="{% url 'followers_list' user.id %}"
+                       class="text-decoration-none">
+
+                        {{ user.followers.count }}
+
+                    </a>
+
+                </h4>
+
+                <small>Followers</small>
+
             </div>
 
             <div class="col">
-                <h3>{{ following_count }}</h3>
-                <p>Following</p>
+
+                <h4>
+
+                    <a href="{% url 'following_list' user.id %}"
+                       class="text-decoration-none">
+
+                        {{ user.following.count }}
+
+                    </a>
+
+                </h4>
+
+                <small>Following</small>
+
             </div>
 
         </div>
 
-        <div class="mb-4">
+        <a href="{% url 'profile' %}"
+           class="btn btn-primary mt-4 mb-4">
 
-            <a href="/profile/"
-               class="btn btn-primary">
-                Edit Profile
-            </a>
+            Edit Profile
 
-            <a href="/posts/create/"
-               class="btn btn-success">
-                + Create Post
-            </a>
-
-            <a href="/posts/feed/"
-               class="btn btn-dark">
-                View Feed
-            </a>
-
-        </div>
+        </a>
 
     </div>
 
 </div>
 
+<hr>
+
+<!-- ================= POSTS ================= -->
+
+<h3 class="mb-3">
+    📰 Latest Posts
+</h3>
+
+
+{% for post in posts %}
+
+<div
+id="post-{{ post.id }}"
+class="post-card mb-4">
+
+
+    <!-- POST HEADER -->
+
+    <div class="post-header">
+
+        <img src="{{ post.user.profile.profile_picture.url }}"
+             class="post-profile-img">
+
+
+        <div>
+
+            <a href="{% url 'user_profile' post.user.id %}"
+               class="text-decoration-none fw-bold">
+
+                {{ post.user.first_name }}
+                {{ post.user.last_name }}
+
+            </a>
+
+
+            <br>
+
+            <small class="text-muted">
+
+                @{{ post.user.username }}
+
+            </small>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- POST BODY -->
+
+
+    <div class="post-body">
+
+
+        <p>
+            {{ post.caption }}
+        </p>
+
+
+
+        {% if post.image %}
+
+        <img src="{{ post.image.url }}"
+             class="post-image">
+
+        {% endif %}
+
+
+
+
+        <!-- STATS -->
+
+
+        <div class="post-stats">
+
+
+            <span>
+
+                ❤️ {{ post.likes.count }} Likes
+
+            </span>
+
+
+            <span>
+
+                <span id="comment-count-{{ post.id }}">
+
+💬 {{ post.comments.count }} Comments
+
+</span>
+
+            </span>
+
+
+        </div>
+
+
+
+
+        <!-- ACTION BUTTONS -->
+
+
+        <div class="post-actions">
+
+
+            <!-- LIKE -->
+
+            <div class="like-section">
+
+
+<button 
+class="btn btn-like like-btn"
+data-post-id="{{ post.id }}">
+
+❤️ Like
+
+</button>
+
+
+<span id="like-count-{{ post.id }}">
+
+    {{ post.likes.count }}
+
+</span> Likes
+
+
+</div>
+
+
+            
+
+
+
+
+
+            <!-- SAVE -->
+
+
+            <button 
+class="btn btn-save save-btn {% if post.id in saved_posts %}saved{% endif %}"
+data-post-id="{{ post.id }}">
+
+
+{% if post.id in saved_posts %}
+
+✅ Saved
+
+{% else %}
+
+🔖 Save
+
+{% endif %}
+
+
+</button>
+<button
+class="btn btn-outline-primary btn-sm share-btn"
+data-post-id="{{ post.id }}"
+data-bs-toggle="modal"
+data-bs-target="#shareModal">
+
+🔗 Share
+
+</button>
+
+        </div>
+
+<hr>
+
+<!-- COMMENTS -->
+
+<div
+id="comments-{{ post.id }}"
+class="comments-list">
+
+    {% for comment in post.comments.all %}
+
+        <div class="border rounded p-2 mb-2">
+
+            <strong>{{ comment.user.username }}</strong><br>
+
+            {{ comment.comment }}
+
+        </div>
+
+    {% empty %}
+
+        <small class="text-muted">
+            No comments yet.
+        </small>
+
+    {% endfor %}
+
+</div>
+
+<form
+class="comment-form"
+data-post-id="{{ post.id }}"
+action="{% url 'add_comment' post.id %}"
+method="POST">
+
+    {% csrf_token %}
+
+    <div class="input-group">
+
+        <input
+            type="text"
+            name="comment"
+            class="form-control"
+            placeholder="Write a comment..."
+            required>
+
+        <button
+type="submit"
+class="btn btn-primary">
+
+<i class="bi bi-send-fill"></i>
+
+</button>
+
+    </div>
+
+</form>
+
+
+
+
+        <!-- EDIT DELETE -->
+
+
+        {% if request.user == post.user %}
+
+
+        <div class="mt-3">
+
+
+            <a href="{% url 'edit_post' post.id %}"
+               class="btn btn-warning btn-sm rounded-pill">
+
+                ✏️ Edit
+
+            </a>
+
+
+
+            <a href="{% url 'delete_post' post.id %}"
+               class="btn btn-danger btn-sm rounded-pill"
+               onclick="return confirm('Delete this post?');">
+
+                🗑 Delete
+
+            </a>
+
+
+        </div>
+
+
+        {% endif %}
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+{% empty %}
+
+
+<div class="alert alert-info">
+
+    No Posts Yet.
+
+</div>
+
+
+{% endfor %}
+
+<hr>
+
+<h3>People You May Know</h3>
+
+{% for person in users %}
+
+<div class="card p-3 mb-3">
+
+    <h5>
+
+        <a href="{% url 'user_profile' person.id %}"
+           class="text-decoration-none">
+
+            {{ person.first_name }}
+            {{ person.last_name }}
+
+        </a>
+
+    </h5>
+
+    <small>
+
+        @{{ person.username }}
+
+    </small>
+
+    <a href="{% url 'follow_user' person.id %}"
+       class="btn {% if person.id in following_ids %}btn-danger{% else %}btn-success{% endif %} mt-2">
+
+        {% if person.id in following_ids %}
+
+            Unfollow
+
+        {% else %}
+
+            Follow
+
+        {% endif %}
+
+    </a>
+
+    {% if person.id in following_ids %}
+
+    <a href="{% url 'chat' person.id %}"
+       class="btn btn-outline-primary mt-2">
+
+        💬 Message
+
+    </a>
+
+    {% endif %}
+
+</div>
+
+{% empty %}
+
+<div class="alert alert-info">
+
+    No users found.
+
+</div>
+
+{% endfor %}
+
 {% else %}
 
 <div class="card shadow p-5 text-center">
 
-    <h1>🚀 Welcome to ConnectHub</h1>
+    <h1>
 
-    <p>Modern Social Media Platform using Django.</p>
+        Welcome to ConnectHub 🚀
 
-    <a href="/register/" class="btn btn-primary">
+    </h1>
+
+    <p>
+
+        Modern Social Media Platform built using Django.
+
+    </p>
+
+    <a href="{% url 'register' %}"
+       class="btn btn-primary">
+
         Create Account
+
     </a>
 
 </div>
 
 {% endif %}
+
+</div>
+
+<!-- ===========================
+SHARE MODAL
+=========================== -->
+
+<div class="modal fade"
+id="shareModal"
+tabindex="-1">
+
+<div class="modal-dialog modal-dialog-centered">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h5 class="modal-title">
+
+Share to ConnectHub
+
+</h5>
+
+<button
+class="btn-close"
+data-bs-dismiss="modal">
+
+</button>
+
+</div>
+
+<div class="modal-body">
+    <input
+type="hidden"
+id="share-post-id">
+
+<input
+type="text"
+id="shareSearch"
+class="form-control mb-3"
+placeholder="Search users...">
+
+<div id="shareUsers">
+
+{% for person in users %}
+
+<div
+class="d-flex
+justify-content-between
+align-items-center
+border rounded
+p-2
+mb-2
+share-user">
+
+<div>
+
+<strong>
+
+{{ person.first_name }}
+{{ person.last_name }}
+
+</strong>
+
+<br>
+
+<small>
+
+@{{ person.username }}
+
+</small>
+
+</div>
+
+<button
+class="btn btn-primary btn-sm send-share"
+data-user="{{ person.id }}">
+
+Send
+
+</button>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
