@@ -1,24 +1,38 @@
 # ConnectHub
 
-ConnectHub is a social media platform built using Django.
+A modern social media platform built using Django.
 
-## Features
+Features
 
-- User Authentication
-- Posts
-- Reels
-- Stories
-- Follow / Unfollow
-- Chat
-- Reply Messages
-- Online Status
-- Typing Indicator
-- Notifications
+✅ Authentication
+✅ User Profiles
+✅ Follow / Unfollow
+✅ Posts
+✅ Likes
+✅ Comments
+✅ Stories
+✅ Reels
+✅ One-to-One Chat
+✅ Reply Messages
+✅ Typing Indicator
+✅ Read Receipts
+✅ Notifications
+✅ Search
 
-## Technologies
+Tech Stack
 
-- Django
-- HTML
-- CSS
-- JavaScript
-- SQLite / PostgreSQL
+Python
+Django
+SQLite
+HTML
+CSS
+Bootstrap
+JavaScript
+
+How to Run
+
+pip install -r requirements.txt
+
+python manage.py migrate
+
+python manage.py runserver
