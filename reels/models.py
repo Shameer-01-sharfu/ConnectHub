@@ -1,5 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
+
+
+def reel_video_storage():
+    """
+    Reel videos must upload to Cloudinary as resource_type="video".
+    The project's default Cloudinary storage (STORAGES["default"]) is
+    configured for images, so uploading an .mp4 through it fails with
+    a Cloudinary API error (surfaces as a 500 on the reel upload view).
+    Falls back to the local filesystem when Cloudinary isn't configured
+    (e.g. local development without CLOUDINARY_* env vars set).
+    """
+    if getattr(settings, "USE_CLOUDINARY", False):
+        from cloudinary_storage.storage import VideoMediaCloudinaryStorage
+        return VideoMediaCloudinaryStorage()
+    from django.core.files.storage import default_storage
+    return default_storage
 
 
 class Reel(models.Model):
@@ -16,7 +33,8 @@ class Reel(models.Model):
     )
 
     video = models.FileField(
-        upload_to="reels/"
+        upload_to="reels/",
+        storage=reel_video_storage
     )
 
     created_at = models.DateTimeField(
