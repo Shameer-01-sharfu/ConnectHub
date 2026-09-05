@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5" style="max-width:640px;">
+
+<div class="card shadow p-4">
+
+<h3>Create Highlight</h3>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'danger' }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<div class="mb-3">
+
+<label>Highlight Title</label>
+
+<input
+type="text"
+name="title"
+class="form-control"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label>Cover Image</label>
+
+<input
+type="file"
+name="cover"
+class="form-control"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label class="fw-semibold mb-2">Choose stories for this highlight</label>
+
+{% if my_stories %}
+
+<div class="row row-cols-3 g-2">
+
+    {% for story in my_stories %}
+
+    <div class="col">
+
+        <label class="story-pick-card d-block position-relative">
+
+            <input
+                type="checkbox"
+                name="stories"
+                value="{{ story.id }}"
+                class="story-pick-checkbox">
+
+            <img src="{{ story.image.url }}" class="story-pick-thumb">
+
+            <span class="story-pick-check">✓</span>
+
+        </label>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="alert alert-info mb-0">
+    You haven't posted any stories yet. Post a story first, then come back to create a highlight from it.
+</div>
+
+{% endif %}
+
+</div>
+
+{% if my_stories %}
+
+<button class="btn btn-primary w-100">
+    Create Highlight
+</button>
+
+{% endif %}
+
+</form>
+
+</div>
+
+</div>
+
+<style>
+
+.story-pick-card{
+    cursor: pointer;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 3px solid transparent;
+}
+
+.story-pick-checkbox{
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.story-pick-thumb{
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    display: block;
+}
+
+.story-pick-check{
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.85);
+    color: #22c55e;
+    font-weight: bold;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.story-pick-checkbox:checked + .story-pick-thumb + .story-pick-check{
+    display: flex;
+}
+
+.story-pick-checkbox:checked ~ .story-pick-check{
+    display: flex;
+}
+
+.story-pick-card:has(.story-pick-checkbox:checked){
+    border-color: #2563eb;
+}
+
+</style>
+
+{% endblock %}

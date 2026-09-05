@@ -1,0 +1,25 @@
+{% extends "reels/base_reels.html" %}
+
+{% block content %}
+
+<div class="reels-page">
+
+    <div class="reel-container">
+
+        {% for reel in reels %}
+
+            {% include "reels/components/reel_card.html" %}
+
+        {% empty %}
+
+        <div class="empty-reels">
+            <h2>No Reels Yet</h2>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

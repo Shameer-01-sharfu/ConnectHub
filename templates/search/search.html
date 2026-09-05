@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>🔍 Search Users</h2>
+
+    <form method="GET">
+
+        <input
+            type="text"
+            name="q"
+            class="form-control"
+            placeholder="Search username..."
+            value="{{ query }}">
+
+    </form>
+
+    <hr>
+
+    {% for person in users %}
+
+    <div class="card mb-3 shadow-sm">
+
+        <div class="card-body d-flex align-items-center">
+
+            <img src="{{ person.profile.profile_picture.url }}"
+                 width="60"
+                 height="60"
+                 class="rounded-circle me-3"
+                 style="object-fit:cover;">
+
+            <div>
+
+                <h5>
+
+                    <a href="{% url 'user_profile' person.id %}"
+                       class="text-decoration-none">
+
+                        {{ person.first_name }}
+                        {{ person.last_name }}
+
+                    </a>
+
+                </h5>
+
+                <small>
+
+                    @{{ person.username }}
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    {% if query %}
+
+    <div class="alert alert-warning">
+
+        No Users Found.
+
+    </div>
+
+    {% endif %}
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ConnectHub</title>
+
+    {% load static %}
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+          <link rel="stylesheet" href="{% static 'css/darkmode.css' %}">
+
+</head>
+
+<body>
+
+    {% include "components/navbar.html" %}
+
+    {% if messages %}
+
+    <div class="message-container">
+
+        {% for message in messages %}
+
+        <div class="alert alert-{{ message.tags }} shadow-sm">
+
+            {{ message }}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+    <main class="pt-5 pb-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% if user.is_authenticated %}
+    <div id="incoming-call-modal" class="incoming-call-overlay" style="display:none;">
+
+        <div class="incoming-call-card">
+
+            <img id="incoming-call-avatar" src="" class="incoming-call-avatar">
+
+            <div id="incoming-call-name" class="incoming-call-name"></div>
+            <div id="incoming-call-type" class="incoming-call-type">Incoming call...</div>
+
+            <div class="incoming-call-actions">
+
+                <button id="incoming-call-decline" class="incoming-call-btn decline-btn">
+                    <i class="bi bi-telephone-x-fill"></i>
+                </button>
+
+                <button id="incoming-call-accept" class="incoming-call-btn accept-btn">
+                    <i class="bi bi-telephone-fill"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <style>
+    .incoming-call-overlay{
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.55);
+        z-index: 3000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .incoming-call-card{
+        background: #fff;
+        border-radius: 20px;
+        padding: 30px 34px;
+        text-align: center;
+        width: 280px;
+        box-shadow: 0 12px 30px rgba(0,0,0,.25);
+        animation: incomingPop .2s ease;
+    }
+    @keyframes incomingPop{
+        from{ transform: scale(.9); opacity: 0; }
+        to{ transform: scale(1); opacity: 1; }
+    }
+    .incoming-call-avatar{
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #2563eb;
+        margin-bottom: 14px;
+    }
+    .incoming-call-name{
+        font-weight: 700;
+        font-size: 18px;
+    }
+    .incoming-call-type{
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    .incoming-call-actions{
+        display: flex;
+        justify-content: center;
+        gap: 26px;
+    }
+    .incoming-call-btn{
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border: none;
+        font-size: 22px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .accept-btn{ background: #22c55e; }
+    .decline-btn{ background: #dc3545; }
+    </style>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/darkmode.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+    {% if user.is_authenticated %}
+    <script>
+    (function(){
+
+        function getCookie(name){
+            let cookieValue = null;
+            if (document.cookie) {
+                document.cookie.split(";").forEach(cookie => {
+                    cookie = cookie.trim();
+                    if (cookie.startsWith(name + "=")) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    }
+                });
+            }
+            return cookieValue;
+        }
+
+        const modal   = document.getElementById("incoming-call-modal");
+        const avatar  = document.getElementById("incoming-call-avatar");
+        const nameEl  = document.getElementById("incoming-call-name");
+        const typeEl  = document.getElementById("incoming-call-type");
+        const acceptBtn  = document.getElementById("incoming-call-accept");
+        const declineBtn = document.getElementById("incoming-call-decline");
+
+        let shownCallId = null;
+        let onCallPage = window.location.pathname.startsWith("/chat/call/");
+
+        function checkIncoming(){
+
+            if (onCallPage) return;
+
+            fetch("/chat/call/incoming/")
+                .then(r => r.json())
+                .then(data => {
+
+                    if (data.incoming && shownCallId !== data.call_id) {
+
+                        shownCallId = data.call_id;
+
+                        avatar.src = data.caller.profile_picture;
+                        nameEl.innerText = data.caller.name;
+                        typeEl.innerText = (data.call_type === "audio" ? "Incoming audio call..." : "Incoming video call...");
+
+                        modal.style.display = "flex";
+
+                        acceptBtn.onclick = () => {
+                            modal.style.display = "none";
+                            window.location.href = "/chat/call/" + data.call_id + "/";
+                        };
+
+                        declineBtn.onclick = () => {
+                            fetch(`/chat/call/${data.call_id}/reject/`, {
+                                method: "POST",
+                                headers: { "X-CSRFToken": getCookie("csrftoken") }
+                            }).finally(() => {
+                                modal.style.display = "none";
+                                shownCallId = null;
+                            });
+                        };
+
+                    } else if (!data.incoming) {
+
+                        modal.style.display = "none";
+                        shownCallId = null;
+
+                    }
+
+                })
+                .catch(() => {});
+        }
+
+        setInterval(checkIncoming, 3000);
+        checkIncoming();
+
+    })();
+    </script>
+    {% endif %}
+
+</body>
+
+</html>

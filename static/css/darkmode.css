@@ -1,0 +1,93 @@
+/* ===============================
+   DARK MODE
+================================ */
+
+body.dark{
+
+    background:#111 !important;
+
+    color:white !important;
+
+}
+
+body.dark .card{
+
+    background:#1b1b1b !important;
+
+    color:white;
+
+    border:1px solid #333;
+
+}
+
+body.dark .navbar{
+
+    background:#111 !important;
+
+}
+
+body.dark .list-group-item{
+
+    background:#1b1b1b;
+
+    color:white;
+
+    border-color:#333;
+
+}
+
+body.dark .list-group-item.active{
+
+    background:#0d6efd;
+
+}
+
+body.dark input,
+
+body.dark textarea{
+
+    background:#2b2b2b;
+
+    color:white;
+
+    border:1px solid #444;
+
+}
+
+body.dark .form-control::placeholder{
+
+    color:#aaa;
+
+}
+
+body.dark a{
+
+    color:#8ab4ff;
+
+}
+
+body.dark .modal-content{
+
+    background:#1b1b1b;
+
+    color:white;
+
+}
+
+body.dark .dropdown-menu{
+
+    background:#222;
+
+}
+
+body.dark .dropdown-item{
+
+    color:white;
+
+}
+
+body.dark .dropdown-item:hover{
+
+    background:#333;
+
+}

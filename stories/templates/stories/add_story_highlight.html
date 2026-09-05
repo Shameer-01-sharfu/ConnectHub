@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<div class="card shadow p-4">
+
+<h3>Add Story To Highlight</h3>
+
+<form method="POST">
+
+{% csrf_token %}
+
+<select
+name="highlight"
+class="form-select mb-3">
+
+{% for h in highlights %}
+
+<option value="{{ h.id }}">
+
+{{ h.title }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+<button class="btn btn-success">
+
+Add
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,520 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="call-wrapper" id="call-wrapper">
+
+    <div class="call-topbar">
+        <div class="d-flex align-items-center">
+            <img src="{{ other_user.profile.profile_picture.url }}" class="call-avatar-sm me-2">
+            <div>
+                <div class="fw-semibold">{{ other_user.first_name }} {{ other_user.last_name|default:other_user.username }}</div>
+                <div class="call-status-text" id="call-status-text">Starting...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="call-stage" id="call-stage">
+
+        <video id="remote-video" autoplay playsinline></video>
+
+        <div class="call-placeholder" id="call-placeholder">
+            <div class="call-placeholder-bg" style="background-image:url('{{ other_user.profile.profile_picture.url }}');"></div>
+            <div class="call-placeholder-overlay"></div>
+            <div class="call-placeholder-content">
+                <img src="{{ other_user.profile.profile_picture.url }}" class="call-avatar-lg">
+                <div class="fw-semibold fs-5 mt-3 text-white">{{ other_user.first_name|default:other_user.username }}</div>
+                <div class="text-white-50" id="call-placeholder-status">Calling...</div>
+            </div>
+        </div>
+
+        <video id="local-video" autoplay playsinline muted></video>
+
+    </div>
+
+    <div class="call-controls">
+
+        <button id="toggle-mic" class="call-control-btn" title="Mute / unmute">
+            <i class="bi bi-mic-fill"></i>
+        </button>
+
+        <button id="toggle-cam" class="call-control-btn" title="Camera on / off">
+            <i class="bi bi-camera-video-fill"></i>
+        </button>
+
+        <button id="end-call" class="call-control-btn end-btn" title="End call">
+            <i class="bi bi-telephone-x-fill"></i>
+        </button>
+
+    </div>
+
+</div>
+
+<style>
+
+.call-wrapper{
+    position: fixed;
+    inset: 0;
+    background: #111827;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+}
+
+.call-topbar{
+    padding: 14px 20px;
+    background: rgba(0,0,0,.35);
+    color: #fff;
+}
+
+.call-avatar-sm{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.call-status-text{
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+.call-stage{
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#remote-video{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #000;
+}
+
+.call-placeholder{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg,#1e293b,#0f172a);
+    overflow: hidden;
+}
+
+.call-placeholder-bg{
+    position: absolute;
+    inset: -20px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(25px) brightness(0.6);
+    transform: scale(1.1);
+}
+
+.call-placeholder-overlay{
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+}
+
+.call-placeholder-content{
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.call-avatar-lg{
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,.2);
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+
+#local-video{
+    position: absolute;
+    width: 130px;
+    height: 174px;
+    object-fit: cover;
+    right: 18px;
+    bottom: 18px;
+    border-radius: 14px;
+    border: 2px solid rgba(255,255,255,.35);
+    background: #000;
+    box-shadow: 0 6px 18px rgba(0,0,0,.4);
+    z-index: 10;
+}
+
+.call-controls{
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    background: rgba(0,0,0,.35);
+}
+
+.call-control-btn{
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .15s;
+}
+
+.call-control-btn:hover{
+    background: rgba(255,255,255,.28);
+}
+
+.call-control-btn.muted{
+    background: #fff;
+    color: #111;
+}
+
+.end-btn{
+    background: #dc3545;
+}
+
+.end-btn:hover{
+    background: #bb2d3b;
+}
+
+@media(max-width:576px){
+    #local-video{
+        width: 92px;
+        height: 122px;
+        right: 12px;
+        bottom: 12px;
+    }
+}
+
+</style>
+
+<script>
+
+const CALL_ID   = {{ call.id }};
+const ROLE      = "{{ role }}";
+const CALL_TYPE = "{{ call.call_type }}";
+
+const statusText  = document.getElementById("call-status-text");
+const placeholderStatus = document.getElementById("call-placeholder-status");
+const placeholder = document.getElementById("call-placeholder");
+const localVideoEl  = document.getElementById("local-video");
+const remoteVideoEl = document.getElementById("remote-video");
+
+let localStream = null;
+let pc = null;
+let appliedRemoteCandidatesCount = 0;
+let statusPoll = null;
+let callEndedByUs = false;
+let connected = false;
+
+function getCookie(name){
+    let cookieValue = null;
+    if (document.cookie) {
+        document.cookie.split(";").forEach(cookie => {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+
+function postJSON(url, body){
+    return fetch(url, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body || {})
+    }).then(r => r.json());
+}
+
+function setStatus(text){
+    statusText.innerText = text;
+    placeholderStatus.innerText = text;
+}
+
+const rtcConfig = {
+    iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        { urls: "stun:stun1.l.google.com:19302" },
+        {
+            urls: "turn:openrelay.metered.ca:80",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        },
+        {
+            urls: "turn:openrelay.metered.ca:443",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        },
+        {
+            urls: "turn:openrelay.metered.ca:443?transport=tcp",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        }
+    ]
+};
+
+async function initCall(){
+
+    setStatus(ROLE === "caller" ? "Calling..." : "Connecting...");
+
+    try {
+        localStream = await navigator.mediaDevices.getUserMedia({
+            video: CALL_TYPE === "video",
+            audio: true
+        });
+    } catch (err) {
+        console.error("[CALL DEBUG] getUserMedia failed:", err);
+        setStatus("Camera/mic permission denied");
+        return;
+    }
+
+    console.log("[CALL DEBUG] local tracks:", localStream.getTracks().map(t => t.kind + ":" + t.readyState));
+
+    if (CALL_TYPE === "video") {
+        localVideoEl.muted = true;
+        localVideoEl.playsInline = true;
+        localVideoEl.srcObject = localStream;
+
+        const localPlayPromise = localVideoEl.play();
+        if (localPlayPromise !== undefined) {
+            localPlayPromise.catch(err => console.warn("Local preview play blocked:", err));
+        }
+    } else {
+        localVideoEl.style.display = "none";
+    }
+
+    pc = new RTCPeerConnection(rtcConfig);
+
+    localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+
+    pc.oniceconnectionstatechange = () => {
+        console.log("[CALL DEBUG] iceConnectionState:", pc.iceConnectionState);
+    };
+
+    pc.onicegatheringstatechange = () => {
+        console.log("[CALL DEBUG] iceGatheringState:", pc.iceGatheringState);
+    };
+
+    pc.onsignalingstatechange = () => {
+        console.log("[CALL DEBUG] signalingState:", pc.signalingState);
+    };
+
+    pc.ontrack = (event) => {
+        console.log("[CALL DEBUG] ontrack fired. kind:", event.track.kind, "streams:", event.streams.length);
+        remoteVideoEl.srcObject = event.streams[0];
+        placeholder.style.display = "none";
+        connected = true;
+        setStatus("In call");
+        startTimer();
+
+        // Some browsers block autoplay of a video element that carries
+        // audio unless it's muted or the play() call is retried.
+        const playPromise = remoteVideoEl.play();
+
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                remoteVideoEl.muted = true;
+                remoteVideoEl.play().then(() => {
+                    // Give the person a one-tap way to restore audio
+                    // if the browser forced it muted.
+                    const unmuteHint = document.createElement("button");
+                    unmuteHint.innerText = "🔇 Tap to unmute";
+                    unmuteHint.className = "call-control-btn unmute-hint";
+                    unmuteHint.style.position = "absolute";
+                    unmuteHint.style.top = "16px";
+                    unmuteHint.style.left = "50%";
+                    unmuteHint.style.transform = "translateX(-50%)";
+                    unmuteHint.style.width = "auto";
+                    unmuteHint.style.padding = "8px 16px";
+                    unmuteHint.style.fontSize = "13px";
+                    unmuteHint.onclick = () => {
+                        remoteVideoEl.muted = false;
+                        unmuteHint.remove();
+                    };
+                    document.getElementById("call-stage").appendChild(unmuteHint);
+                }).catch((err) => console.warn("Remote playback still blocked:", err));
+            });
+        }
+    };
+
+    pc.onicecandidate = (event) => {
+        if (event.candidate) {
+            postJSON(`/chat/call/${CALL_ID}/ice/`, { candidate: event.candidate });
+        }
+    };
+
+    pc.onconnectionstatechange = () => {
+        console.log("[CALL DEBUG] connectionState:", pc.connectionState);
+        if (["disconnected", "failed", "closed"].includes(pc.connectionState) && !callEndedByUs) {
+            endCall(false);
+        }
+    };
+
+    if (ROLE === "caller") {
+
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        await postJSON(`/chat/call/${CALL_ID}/offer/`, { sdp: offer });
+
+    }
+
+    statusPoll = setInterval(pollStatus, 1500);
+    pollStatus();
+}
+
+async function pollStatus(){
+
+    try {
+
+        const res = await fetch(`/chat/call/${CALL_ID}/status/`);
+        const data = await res.json();
+
+        if (!data.success) return;
+
+        if (["rejected", "missed", "ended"].includes(data.status)) {
+
+            clearInterval(statusPoll);
+
+            if (data.status === "rejected") setStatus("Call declined");
+            else if (data.status === "missed") setStatus("No answer");
+            else setStatus("Call ended");
+
+            cleanupAndLeave();
+            return;
+        }
+
+        // Caller waits for the answer
+        if (ROLE === "caller" && data.answer && pc.currentRemoteDescription === null) {
+            await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+        }
+
+        // Receiver waits for the offer
+        if (ROLE === "receiver" && data.offer && pc.currentRemoteDescription === null) {
+            await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+            await postJSON(`/chat/call/${CALL_ID}/answer/`, { sdp: answer });
+        }
+
+        // Apply any new ICE candidates from the other side
+        if (data.candidates && data.candidates.length > appliedRemoteCandidatesCount) {
+
+            const newOnes = data.candidates.slice(appliedRemoteCandidatesCount);
+            appliedRemoteCandidatesCount = data.candidates.length;
+
+            for (const c of newOnes) {
+                try {
+                    await pc.addIceCandidate(new RTCIceCandidate(c));
+                } catch (e) {
+                    console.warn("ICE candidate error", e);
+                }
+            }
+        }
+
+    } catch (err) {
+        console.warn(err);
+    }
+}
+
+let timerInterval = null;
+
+function startTimer(){
+    if (timerInterval) return;
+    let seconds = 0;
+    timerInterval = setInterval(() => {
+        seconds++;
+        const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+        const s = String(seconds % 60).padStart(2, "0");
+        statusText.innerText = `In call · ${m}:${s}`;
+    }, 1000);
+}
+
+function cleanupAndLeave(){
+
+    if (timerInterval) clearInterval(timerInterval);
+
+    if (localStream) {
+        localStream.getTracks().forEach(t => t.stop());
+    }
+
+    if (pc) {
+        pc.close();
+    }
+
+    setTimeout(() => {
+        window.location.href = "/chat/{{ other_user.id }}/";
+    }, 1200);
+}
+
+function endCall(notifyServer = true){
+
+    callEndedByUs = true;
+
+    if (statusPoll) clearInterval(statusPoll);
+
+    if (notifyServer) {
+        postJSON(`/chat/call/${CALL_ID}/end/`, {}).finally(cleanupAndLeave);
+    } else {
+        cleanupAndLeave();
+    }
+}
+
+document.getElementById("end-call").addEventListener("click", () => endCall(true));
+
+document.getElementById("toggle-mic").addEventListener("click", function(){
+    if (!localStream) return;
+    const track = localStream.getAudioTracks()[0];
+    if (!track) return;
+    track.enabled = !track.enabled;
+    this.classList.toggle("muted", !track.enabled);
+    this.querySelector("i").className = track.enabled ? "bi bi-mic-fill" : "bi bi-mic-mute-fill";
+});
+
+document.getElementById("toggle-cam").addEventListener("click", function(){
+    if (!localStream || CALL_TYPE !== "video") return;
+    const track = localStream.getVideoTracks()[0];
+    if (!track) return;
+    track.enabled = !track.enabled;
+    this.classList.toggle("muted", !track.enabled);
+    this.querySelector("i").className = track.enabled ? "bi bi-camera-video-fill" : "bi bi-camera-video-off-fill";
+});
+
+if (CALL_TYPE !== "video") {
+    document.getElementById("toggle-cam").style.display = "none";
+}
+
+window.addEventListener("beforeunload", () => {
+    if (!callEndedByUs) {
+        navigator.sendBeacon(
+            `/chat/call/${CALL_ID}/end/`,
+            new Blob([JSON.stringify({})], { type: "application/json" })
+        );
+    }
+});
+
+initCall();
+
+</script>
+
+{% endblock %}

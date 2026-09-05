@@ -1,0 +1,142 @@
+<div class="reel">
+
+    <!-- Video -->
+    <video
+        class="reel-video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        data-reel="{{ reel.id }}">
+
+        <source src="{{ reel.video.url }}" type="video/mp4">
+
+        Your browser does not support video.
+
+    </video>
+
+    <!-- Dark Overlay -->
+    <div class="video-overlay"></div>
+
+    <!-- User Details -->
+    <div class="reel-info">
+
+        <div class="user-row">
+
+            <img
+                src="{{ reel.user.profile.profile_picture.url }}"
+                class="profile-pic"
+                alt="Profile">
+
+            <div>
+
+                <div class="username">
+
+                    {{ reel.user.first_name }} {{ reel.user.last_name }}
+
+                </div>
+
+                <small>
+
+                    @{{ reel.user.username }}
+
+                </small>
+
+            </div>
+
+        </div>
+
+        {% if reel.caption %}
+
+        <div class="caption">
+
+            {{ reel.caption }}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- Actions -->
+    <div class="reel-actions">
+
+        <!-- Like -->
+        <button
+            class="action-btn like-btn"
+            data-url="{% url 'like_reel' reel.id %}"
+            data-reel-id="{{ reel.id }}">
+
+            {% if request.user in reel.likes.all %}
+                ❤️
+            {% else %}
+                🤍
+            {% endif %}
+
+        </button>
+
+        <span
+            class="action-count"
+            id="like-count-{{ reel.id }}">
+
+            {{ reel.likes.count }}
+
+        </span>
+        <div class="action-count">
+    👀 {{ reel.views.count }}
+</div>
+
+        <!-- Save -->
+        <a
+            href="{% url 'save_reel' reel.id %}"
+            class="action-btn">
+
+            {% if request.user in reel.saved_by.all %}
+                ✅
+            {% else %}
+                🔖
+            {% endif %}
+
+        </a>
+
+        <!-- Comment -->
+        <button
+    class="action-btn comment-btn"
+    onclick="location.href='{% url 'reel_comment' reel.id %}'">
+
+    💬
+
+<!-- Share -->
+<button
+    class="action-btn share-btn"
+    data-reel="{{ reel.id }}">
+
+    ➤
+
+</button>
+        {% if reel.user == request.user %}
+
+<a
+    href="{% url 'edit_reel' reel.id %}"
+    class="action-btn"
+    title="Edit Reel">
+
+    ✏️
+
+</a>
+
+<a
+    href="{% url 'delete_reel' reel.id %}"
+    class="action-btn"
+    title="Delete Reel">
+
+    🗑️
+
+</a>
+
+{% endif %}
+
+    </div>
+
+</div>
