@@ -145,6 +145,7 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Cloudinary - persistent cloud storage for user-uploaded media
 # (profile pics, post images, reel videos). Required in production
