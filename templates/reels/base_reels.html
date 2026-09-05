@@ -1,0 +1,99 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ConnectHub Reels</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Bootstrap Icons (needed for the back arrow icon) -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- Reels CSS -->
+    <link rel="stylesheet"
+          href="{% static 'css/reels.css' %}">
+
+</head>
+
+<body class="reels-body">
+
+    <!-- Top Navbar -->
+
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+
+            <div class="d-flex align-items-center gap-2">
+
+                <button
+                    type="button"
+                    class="btn btn-sm rounded-circle back-btn"
+                    onclick="goBackFromReels()"
+                    title="Back">
+
+                    <span aria-hidden="true">&#8592;</span>
+
+                </button>
+
+                <a class="navbar-brand fw-bold mb-0"
+                   href="/">
+
+                    🚀 ConnectHub
+
+                </a>
+
+            </div>
+
+            <div>
+
+                <a href="{% url 'create_reel' %}"
+                   class="btn btn-primary">
+
+                    ➕ Upload Reel
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!-- Reels Content -->
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Bootstrap -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Reels JS -->
+
+    <script>
+    function goBackFromReels(){
+        if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+            window.history.back();
+        } else {
+            window.location.href = "/";
+        }
+    }
+    </script>
+
+    <script src="{% static 'js/reels.js' %}"></script>
+    {% include "reels/share_modal.html" %}
+
+</body>
+
+</html>

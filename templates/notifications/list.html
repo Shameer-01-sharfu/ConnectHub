@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">
+        🔔 Notifications
+    </h2>
+
+    {% for notification in notifications %}
+
+    <div class="card mb-3 shadow-sm">
+
+        <div class="card-body">
+
+            {% if notification.link %}
+
+            <a href="{{ notification.link }}"
+               class="text-decoration-none text-dark">
+
+                {{ notification.message }}
+
+            </a>
+
+            {% else %}
+
+                {{ notification.message }}
+
+            {% endif %}
+
+            <br>
+
+            <small class="text-muted">
+
+                {{ notification.created_at|timesince }} ago
+
+            </small>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <div class="alert alert-info">
+
+        No Notifications Yet.
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

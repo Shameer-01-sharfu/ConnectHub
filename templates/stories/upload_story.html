@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<div class="row justify-content-center">
+
+<div class="col-md-6">
+
+<div class="card shadow-lg">
+
+<div class="card-header text-center">
+
+<h3>📸 Add Story</h3>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<div class="mb-3">
+
+<label>Story Image</label>
+
+{{ form.image }}
+
+</div>
+
+<div class="mb-3">
+
+<label>Caption</label>
+
+{{ form.caption }}
+
+</div>
+
+<button class="btn btn-primary w-100">
+
+Upload Story
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

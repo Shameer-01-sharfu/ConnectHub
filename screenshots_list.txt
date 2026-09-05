@@ -1,0 +1,13 @@
+login.png
+
+home.png
+
+profile.png
+
+chat.png
+
+reels.png
+
+stories.png
+
+notification.png

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h3 class="text-center mb-4">
+        {{ highlight.title }}
+    </h3>
+
+    {% for story in stories %}
+
+    <div class="card shadow mb-4">
+
+        <img src="{{ story.image.url }}"
+             class="card-img-top"
+             style="max-height:600px;object-fit:contain;">
+
+        {% if story.caption %}
+
+        <div class="card-body">
+
+            <h5>{{ story.caption }}</h5>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    {% empty %}
+
+    <div class="alert alert-info text-center">
+
+        No Stories Found.
+
+    </div>
+
+    {% endfor %}
+
+    <div class="text-center">
+
+        <a href="{% url 'user_profile' highlight.user.id %}"
+           class="btn btn-primary">
+
+            ← Back to Profile
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
