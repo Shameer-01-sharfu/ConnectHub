@@ -66,13 +66,13 @@ position:relative;">
     color:white;
     z-index:10;">
 
-        <img src="{{ story_user.profile.profile_picture.url }}"
-             width="45"
-             height="45"
-             style="
-             border-radius:50%;
-             object-fit:cover;
-             margin-right:10px;">
+        {% if story_user.profile.profile_picture %}
+    <img src="{{ story_user.profile.profile_picture.url }}"
+         width="45" height="45"
+         style="border-radius:50%;object-fit:cover;margin-right:10px;">
+{% else %}
+    <div style="width:45px;height:45px;border-radius:50%;background:#555;margin-right:10px;"></div>
+{% endif %}
 
         <div>
 
