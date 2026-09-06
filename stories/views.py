@@ -263,3 +263,20 @@ def react_story(request, story_id, emoji):
     return redirect(
         f"/stories/user/{story.user.id}/"
     )
+@login_required
+def delete_story(request, story_id):
+
+    story = get_object_or_404(
+        Story,
+        id=story_id,
+        user=request.user  # own story mattum delete panna mudiyum
+    )
+
+    story.delete()
+
+    messages.success(
+        request,
+        "Story deleted successfully."
+    )
+
+    return redirect("home")
