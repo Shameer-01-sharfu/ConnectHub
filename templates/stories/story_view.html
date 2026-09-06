@@ -98,6 +98,36 @@ position:relative;">
     </div>
 
 
+    <!-- Delete Button (only visible to the story's own owner) -->
+    {% if request.user == story_user %}
+
+    <div style="
+    position:absolute;
+    top:35px;
+    right:20px;
+    z-index:10;">
+
+        <form method="POST" action="{% url 'delete_story' story.id %}">
+            {% csrf_token %}
+            <button type="submit"
+                    onclick="return confirm('Delete this story?')"
+                    style="
+                    background:rgba(0,0,0,.55);
+                    color:white;
+                    border:none;
+                    padding:8px 12px;
+                    border-radius:8px;
+                    font-size:16px;
+                    cursor:pointer;">
+                🗑️ Delete
+            </button>
+        </form>
+
+    </div>
+
+    {% endif %}
+
+
     <!-- Story Image -->
     <img src="{{ story.image.url }}"
          style="
