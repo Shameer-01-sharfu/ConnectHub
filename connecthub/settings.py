@@ -28,8 +28,10 @@ SECRET_KEY = os.environ.get(
     "django-insecure-=9_6bzyb5)r*a-g0w!xq8x=nkc16__=c11zy0p1vwn%-zkgcbk",
 )
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+# DEBUG is ON when running on your own PC and OFF on Vercel (Vercel sets VERCEL=1).
+# You can still force it with the DEBUG environment variable.
+_on_vercel = bool(os.environ.get("VERCEL"))
+DEBUG = os.environ.get("DEBUG", "False" if _on_vercel else "True").lower() in ("1", "true", "yes")
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
